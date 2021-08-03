@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import {Switcher} from '../../../../elements';
 import {SectionWrapper} from '../../../../sections';
+import {Switcher} from '../../../../elements';
 
 interface Props {
     onChange?(event: React.FormEvent<HTMLInputElement>): void;
@@ -19,6 +19,7 @@ const ManualPopulationSwitcher: React.FC<Props> = props => {
 };
 
 ManualPopulationSwitcher.defaultProps = {
+    // tslint:disable-next-line: no-empty
     onChange: () => {},
 } as Partial<Props>;
 

@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 import {ElementCaption, Input} from '../../../../elements';
-import {SectionWrapper} from '../../../../sections';
 
+import {SectionWrapper} from '../../../../sections';
 import styles from './styles.module.scss';
 
 interface Props {
@@ -27,6 +27,7 @@ const SelectRange: React.FC<Props> = props => {
 };
 
 SelectRange.defaultProps = {
+    // tslint:disable-next-line: no-empty
     onChange: () => {},
     value: '',
     error: false,

@@ -68,15 +68,16 @@ const App = ({}) => {
 
     // Handle file input type
     const handleChangeButton = e => {
-        let fileReader = new FileReader();
+        const fileReader = new FileReader();
         fileReader.readAsText(e.target.files[0]);
 
         fileReader.onload = () => {
             try {
-                let obj = JSON.parse(fileReader.result as string);
-                let clearedFromNull = clearNullValues(obj);
-
-                loadOperationView(groupFlattenedObj(clearedFromNull));
+                const obj = JSON.parse(fileReader.result as string);
+                const clearedFromNull = clearNullValues(obj);
+                const oprView = groupFlattenedObj(clearedFromNull);
+                console.log('Loaded', oprView);
+                loadOperationView(oprView);
             } catch (error) {
                 showErrorMsg(error, 'Something wrong with the file. Check the structure');
             }
@@ -86,13 +87,13 @@ const App = ({}) => {
 
     // Handle copy from Clipboard
     function fetchUrlLink() {
-        let clipboardLink = execGetClipboard();
+        const clipboardLink = execGetClipboard();
 
         fetchJSONfromURL(
             clipboardLink,
             responseJson => {
-                let clearedFromNull = clearNullValues(responseJson);
-                let obj = groupFlattenedObj(clearedFromNull);
+                const clearedFromNull = clearNullValues(responseJson);
+                const obj = groupFlattenedObj(clearedFromNull);
                 loadOperationView(obj);
             },
             error => {

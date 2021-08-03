@@ -6,9 +6,11 @@
     "scripts": {
         "build": "/usr/local/bin/node node_modules/.bin/webpack --mode=production",
         "build:watch": "/usr/local/bin/node node_modules/.bin/webpack --mode=development --watch",
-        "prettier:format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}' "
+        "prettier:format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}' ",
+        "lint": "tslint 'src/**/*.ts?(x)'"
     },
     "dependencies": {
+        "g": "^2.0.1",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "safe-stable-stringify": "^1.1.1"
@@ -29,7 +31,7 @@
         "sass-loader": "^8.0.2",
         "style-loader": "^0.23.1",
         "ts-loader": "^6.2.2",
-        "tslint": "^5.18.0",
+        "tslint": "^5.20.1",
         "tslint-react": "^4.0.0",
         "typescript": "^3.8.3",
         "url-loader": "^2.1.0",

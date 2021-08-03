@@ -4,6 +4,28 @@ import {pluginFrameSize} from '../data/pluginFrameSize';
 import {skipSign} from '../data/skipSign';
 import stringify from 'safe-stable-stringify';
 
+let json = [];
+const propsToSave = [
+    'characters',
+    'fills',
+    'strokes',
+    'strokeWeight',
+    'strokeAlign',
+    'constraints',
+    'x',
+    'y',
+    'rotation',
+    'opacity',
+    'blendMode',
+    'effects',
+    'cornerRadius',
+    'cornerSmoothing',
+    'topLeftRadius',
+    'topRightRadius',
+    'bottomLeftRadius',
+    'bottomRightRadius',
+];
+
 // SHOW UI
 figma.showUI(__html__, {width: pluginFrameSize.width, height: pluginFrameSize.height});
 
@@ -40,47 +62,31 @@ figma.ui.onmessage = msg => {
         if (selection === null || selection.length === 0) {
             figmaNotify('error', 'Select nodes to save', 3000);
         }
-
-        const json = [];
-        selection.map(node => {
-            const propsToSave = [
-                'characters',
-                'fills',
-                'strokes',
-                'strokeWeight',
-                'strokeAlign',
-                'constraints',
-                'x',
-                'y',
-                'rotation',
-                'opacity',
-                'blendMode',
-                'effects',
-                'cornerRadius',
-                'cornerSmoothing',
-                'topLeftRadius',
-                'topRightRadius',
-                'bottomLeftRadius',
-                'bottomRightRadius',
-            ];
-            const props = {};
-            let name = node.name.toString();
-            name = node.type;
-            let numberOfUndefinedValues = 0;
-            propsToSave.forEach(prop => {
-                const value = node[prop];
-                if (value !== undefined) {
-                    props[`${name}.${prop}`] = JSON.stringify(value);
-                } else {
-                    numberOfUndefinedValues++;
-                }
-            });
-            if (numberOfUndefinedValues !== propsToSave.length) {
-                json.push(props);
-            }
-        });
+        json = [];
+        selection.map(getJson);
 
         figma.ui.postMessage({type: 'json-ready-to-save', json});
+    }
+
+    function getJson(node) {
+        const props = {};
+        let name = node.name.toString();
+        name = node.type;
+        let numberOfUndefinedValues = 0;
+        propsToSave.forEach(prop => {
+            const value = node[prop];
+            if (value !== undefined) {
+                props[`${name}.${prop}`] = JSON.stringify(value);
+            } else {
+                numberOfUndefinedValues++;
+            }
+        });
+        if (numberOfUndefinedValues !== propsToSave.length) {
+            json.push(props);
+        }
+        if (node.children) {
+            node.children.forEach(getJson);
+        }
     }
 
     if (msg.type === 'manual-populate') {
@@ -108,9 +114,9 @@ figma.ui.onmessage = msg => {
             opacity: 1,
             blendMode: 'NORMAL',
             scaleMode: 'FILL',
-            imageHash: imageHash,
+            imageHash,
         };
-        target['fills'] = [newFill];
+        target.fills = [newFill];
     }
 
     // "SKIP LAYERS" FUNCTIONS

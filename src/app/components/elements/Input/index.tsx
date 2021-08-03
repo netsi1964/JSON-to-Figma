@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import styles from './styles.module.scss';
 
 interface Props {
@@ -12,6 +13,7 @@ const Input: React.FC<Props> = props => {
 
     const handleOnChange = e => {
         setVal(e.target.value);
+        // tslint:disable-next-line:no-unused-expression
         props.onChange;
     };
 
@@ -27,6 +29,7 @@ const Input: React.FC<Props> = props => {
 
 Input.defaultProps = {
     value: '',
+    // tslint:disable-next-line: no-empty
     onChange: () => {},
     className: '',
 } as Partial<Props>;

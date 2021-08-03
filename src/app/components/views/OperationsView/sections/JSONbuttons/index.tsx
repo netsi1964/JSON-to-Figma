@@ -1,13 +1,13 @@
 import * as React from 'react';
 
-import {isImageString, downloadJSON, filterObjRange, postFigmaMessage} from '../../../../../utils';
+import {downloadJSON, filterObjRange, isImageString, postFigmaMessage} from '../../../../../utils';
+
 import {Button} from '../../../../elements';
 import {SectionWrapper} from '../../../../sections';
-
 import styles from './styles.module.scss';
 
 interface Props {
-    obj: Object;
+    obj: object;
     random: boolean;
     range: string;
     onReuploadClick(event: React.MouseEvent<HTMLButtonElement>): void;
@@ -16,10 +16,13 @@ interface Props {
 const JSONButtons: React.FC<Props> = props => {
     // INITIAL CONSTANTS
     const initialToggle = Object.keys(props.obj[0]).reduce((acc, curr) => ((acc[curr] = false), acc), {});
-    const obj = Object.keys(props.obj[0]);
+    const obj = [];
+    (props.obj as object[]).forEach(o => {
+        Object.keys(o).forEach(key => (obj.includes(key) ? '' : obj.push(key)));
+    });
 
     // STATES
-    const [selectedItems, setSelecteditems] = React.useState([] as Array<string>);
+    const [selectedItems, setSelecteditems] = React.useState([] as string[]);
     const [toggle, setToggle] = React.useState(initialToggle);
 
     // POST DATA FOO TEMPLATE
@@ -40,6 +43,7 @@ const JSONButtons: React.FC<Props> = props => {
 
     // BUTTONS
     const createButtons = () => {
+        console.log('JSONButtons', obj);
         return obj.map((item, i) => {
             const handleClick = e => {
                 if (typeof e.target.textContent !== 'undefined') {
@@ -58,7 +62,8 @@ const JSONButtons: React.FC<Props> = props => {
                 }
             }, [toggle[item]]);
 
-            const isImage = isImageString(props.obj[0][item].toString().split('?')[0]);
+            // const isImage = isImageString(props.obj[0][item].toString().split('?')[0]);
+            const isImage = isImageString('');
 
             return (
                 <Button
@@ -73,12 +78,12 @@ const JSONButtons: React.FC<Props> = props => {
     };
 
     // HANDLERS
-    const handllePopulate = obj => {
+    const handllePopulate = o => {
         postFigmaMessage({
             type: 'populate',
             random: props.random,
             selected: selectedItems,
-            obj: filterObjRange(props.range, obj),
+            obj: filterObjRange(props.range, o),
         });
     };
 
@@ -96,11 +101,11 @@ const JSONButtons: React.FC<Props> = props => {
             .map(item => (Object.values(item)[0] ? Object.keys(item)[0] : false))
             .filter(Boolean);
 
-        setSelecteditems(invertedItems as Array<string>);
+        setSelecteditems(invertedItems as string[]);
     };
 
-    const handleDownload = obj => {
-        downloadJSON(filterObjRange(props.range, obj));
+    const handleDownload = o => {
+        downloadJSON(filterObjRange(props.range, o));
     };
 
     // RENDER

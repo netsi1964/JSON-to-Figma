@@ -7,7 +7,7 @@ import {SectionWrapper} from '../../../../sections';
 import styles from './styles.module.scss';
 
 interface Props {
-    obj: Object;
+    obj: object;
     random: boolean;
     range: string;
     onReuploadClick(event: React.MouseEvent<HTMLButtonElement>): void;
@@ -15,7 +15,13 @@ interface Props {
 
 const ManualJSONButtons: React.FC<Props> = props => {
     // INITIAL CONSTANTS
-    const obj = Object.keys(props.obj[0]);
+    const keys = [];
+    console.log(props.obj);
+    (props.obj as object[]).forEach(o => {
+        Object.keys(o).forEach(key => (keys.includes(key) ? '' : keys.push(key)));
+    });
+    // const obj = Object.keys(props.obj[0]);
+    const obj = keys;
 
     // STATES
     const [selected, setSelected] = React.useState(null);
@@ -26,7 +32,7 @@ const ManualJSONButtons: React.FC<Props> = props => {
             type: 'post-plugin-storage',
             random: props.random,
             manual: true,
-            selected: selected,
+            selected,
             obj: filterObjRange(props.range, props.obj),
         });
     };
@@ -38,6 +44,8 @@ const ManualJSONButtons: React.FC<Props> = props => {
 
     // BUTTONS
     const createButtons = () => {
+        console.log('ManualJSONButtons', obj);
+
         return obj.map((item, i) => {
             const handleClick = e => {
                 if (typeof e.target.textContent !== 'undefined') {
@@ -64,17 +72,17 @@ const ManualJSONButtons: React.FC<Props> = props => {
     };
 
     // HANDLERS
-    const handllePopulate = obj => {
+    const handllePopulate = o => {
         postFigmaMessage({
             type: 'manual-populate',
             random: props.random,
-            selected: selected,
-            obj: filterObjRange(props.range, obj),
+            selected,
+            obj: filterObjRange(props.range, o),
         });
     };
 
-    const handleDownload = obj => {
-        downloadJSON(filterObjRange(props.range, obj));
+    const handleDownload = o => {
+        downloadJSON(filterObjRange(props.range, o));
     };
 
     return (

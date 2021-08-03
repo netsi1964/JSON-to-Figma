@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import {Switcher} from '../../../../elements';
 import {SectionWrapper} from '../../../../sections';
+import {Switcher} from '../../../../elements';
 
 interface Props {
     onChange?(event: React.FormEvent<HTMLInputElement>): void;
@@ -16,6 +16,7 @@ const RandomSwitcher: React.FC<Props> = props => {
 };
 
 RandomSwitcher.defaultProps = {
+    // tslint:disable-next-line:no-empty
     onChange: () => {},
 } as Partial<Props>;
 
